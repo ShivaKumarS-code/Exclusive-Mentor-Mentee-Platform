@@ -1,10 +1,25 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Register from './pages/auth/Register';
-import Login from './pages/auth/Login';
-import MentorDashboard from "./pages/mentor/MentorDashboard";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Register from "./pages/auth/Register";
+import Login from "./pages/auth/Login";
+import PrivateRoute from "./components/PrivateRoute";
+
+
 import MenteeDashboard from "./pages/mentee/MenteeDashboard";
-import PrivateRoute from './components/PrivateRoute'; // Import PrivateRoute component
+import MenteeAppointment from "./pages/mentee/MenteeAppointment"
+import Achievement from "./pages/mentee/Achievement";
+import MenteeChat from "./pages/mentee/MenteeChat";
+import Feedback from "./pages/mentee/Feedback";
+
+
+import MentorDashboard from "./pages/mentor/MentorDashboard";
+import YourMentee from "./pages/mentor/YourMentee";
+import SelectMentee from "./pages/mentor/SelectMentee";
+import MentorAppointment from "./pages/mentor/MentorAppointment";
+import MenteesAchievement from "./pages/mentor/MenteesAchievement";
+import MentorChat from "./pages/mentor/MentorChat";
+import ViewFeedback from "./pages/mentor/ViewFeedback";
+import ViewAppointment from "./components/Appointments/viewAppointment";
 
 const App = () => {
   return (
@@ -15,26 +30,146 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Protected Routes */}
-        <Route 
-          path="/mentor/dashboard" 
+
+        {/* ------------------ Mentor Routes ------------------- */}
+        <Route
+          path="/mentor/dashboard"
           element={
             <PrivateRoute role="mentor">
               <MentorDashboard />
             </PrivateRoute>
-          } 
+          }
         />
-        <Route 
-          path="/mentee/dashboard" 
+        
+        <Route
+          path="/mentor/selectMentee"
+          element={
+            <PrivateRoute role="mentor">
+              <SelectMentee />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/mentor/yourMentee"
+          element={
+            <PrivateRoute role="mentor">
+              <YourMentee />
+            </PrivateRoute>
+          }
+        />
+        
+          <Route
+            path="/mentor/appointments"
+            element={
+              <PrivateRoute role="mentor">
+                <MentorAppointment />
+              </PrivateRoute>
+            }
+          />
+        
+          <Route
+            path="/mentor/achievements"
+            element={
+              <PrivateRoute role="mentor">
+                <MenteesAchievement />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+          path="/mentor/view-appointments"
+          element={
+            <PrivateRoute role="mentor">
+              <ViewAppointment />
+            </PrivateRoute>
+          }
+        />
+          
+          <Route
+            path="/mentor/chat"
+            element={
+              <PrivateRoute role="mentor">
+                <MentorChat />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/mentor/feedback"
+            element={
+              <PrivateRoute role="mentor">
+                <ViewFeedback />
+              </PrivateRoute>
+            }
+          />
+
+
+        {/* ------------------- Mentee Routes ------------------- */}
+        <Route
+          path="/mentee/dashboard"
           element={
             <PrivateRoute role="mentee">
               <MenteeDashboard />
             </PrivateRoute>
-          } 
+          }
         />
 
-        {/* Default Route */}
-        <Route path="*" element={<div className="text-center mt-10">HARE KRISHNA (frontend)</div>} />
+        <Route
+          path="/mentee/appointments"
+          element={
+            <PrivateRoute role="mentee">
+              <MenteeAppointment />
+            </PrivateRoute>
+          }
+        />
+        
+        <Route
+          path="/mentee/achievements"
+          element={
+            <PrivateRoute role="mentee">
+              <Achievement />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/mentee/view-appointments"
+          element={
+            <PrivateRoute role="mentee">
+              <ViewAppointment />
+            </PrivateRoute>
+          }
+        />
+        
+        <Route
+          path="/mentee/chat"
+          element={
+            <PrivateRoute role="mentee">
+              <MenteeChat />
+            </PrivateRoute>
+          }
+        />
+        
+        <Route
+          path="/mentee/feedback"
+          element={
+            <PrivateRoute role="mentee">
+              <Feedback />
+            </PrivateRoute>
+          }
+        />
+
+
+
+
+
+
+        {/* ---------------- Default Route ---------------- */}
+        <Route
+          path="*"
+          element={<div className="text-center mt-10">HARE KRISHNA (frontend)</div>}
+        />
       </Routes>
     </div>
   );

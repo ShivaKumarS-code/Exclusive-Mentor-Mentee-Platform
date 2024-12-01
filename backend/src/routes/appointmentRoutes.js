@@ -1,13 +1,14 @@
-import express from 'express';
-import { createAppointment, getAppointments } from '../controllers/appointmentController.js';
-import { authMiddleware } from '../middlewares/authMiddleware.js';
+// src/routes/mentorshipRoutes.js
+
+import express from "express";
+import { getUnassignedMentees, assignMenteeToMentor } from "../controllers/mentorshipController.js";
 
 const router = express.Router();
 
-// Create an appointment (protected)
-router.post('/', authMiddleware, createAppointment);
+// Route to get all unassigned mentees
+router.get("/unassigned", getUnassignedMentees);
 
-// Get all appointments (protected)
-router.get('/', authMiddleware, getAppointments);
+// Route to assign a mentee to a mentor
+router.post("/assign", assignMenteeToMentor);
 
 export default router;

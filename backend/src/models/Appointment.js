@@ -1,27 +1,39 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const appointmentSchema = new mongoose.Schema({
-  mentor: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+const appointmentSchema = new mongoose.Schema(
+  {
+    from: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Reference to the User model (who is requesting the appointment)
+      required: true,
+    },
+    to: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Reference to the User model (who receives the appointment)
+      required: true,
+    },
+    date: {
+      type: Date,
+      required: true,
+    },
+    time: {
+      type: String,
+      required: true,
+    },
+    reason: {
+      type: String,
+      required: true,
+      maxlength: 300, // Optional: Limit the reason's length
+    },
+    status: {
+      type: String,
+      enum: ["approving", "approved", "denied"], // Appointment status
+      default: "approving",
+    },
   },
-  mentee: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  date: {
-    type: Date,
-    required: true,
-  },
-  status: {
-    type: String,
-    enum: ['pending', 'confirmed', 'completed', 'cancelled'],
-    default: 'pending',
-  },
-}, { timestamps: true });
+  { timestamps: true } // Automatically adds createdAt and updatedAt fields
+);
 
-const Appointment = mongoose.model('Appointment', appointmentSchema);
+const Appointment = mongoose.model("Appointment", appointmentSchema);
 
 export default Appointment;

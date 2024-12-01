@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      match: [/\S+@\S+\.\S+/, 'Please use a valid email address'],
+      match: [/\S+@\S+\.\S+/, "Please use a valid email address"],
     },
     password: {
       type: String,
@@ -21,20 +21,28 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['mentor', 'mentee'],
+      enum: ["mentor", "mentee"],
       required: true,
     },
     mentorId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User", // Reference to the mentor for a mentee
+      required: function() {
+        return this.role === "mentee"; // MentorId is required only for mentees
+      }
+    },
+    assignedMentor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Reference to the assigned mentor for mentees
+      default: null, // Default null in case the mentee is not assigned yet
     },
   },
   { timestamps: true }
 );
 
 // Pre-save middleware to hash password on new or modified passwords
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
     return next();
   }
   this.password = await bcrypt.hash(this.password, 10);
@@ -42,9 +50,9 @@ userSchema.pre('save', async function (next) {
 });
 
 // Pre-update middleware to hash password if it's modified in an update operation
-userSchema.pre('findOneAndUpdate', async function (next) {
+userSchema.pre("findOneAndUpdate", async function (next) {
   const update = this.getUpdate();
-  
+
   // Check if password is being updated
   if (update.password) {
     update.password = await bcrypt.hash(update.password, 10);
@@ -61,7 +69,7 @@ userSchema.methods.isPasswordMatch = async function (password) {
 userSchema.methods.generateAuthToken = function () {
   const payload = { id: this._id, role: this.role };
 
-  const expiresIn = process.env.ACCESS_TOKEN_EXPIRY || '1d';
+  const expiresIn = process.env.ACCESS_TOKEN_EXPIRY || "1d";
 
   const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn,
@@ -70,6 +78,6 @@ userSchema.methods.generateAuthToken = function () {
   return accessToken;
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 export default User;
