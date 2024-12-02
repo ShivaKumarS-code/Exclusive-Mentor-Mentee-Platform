@@ -27,15 +27,14 @@ const userSchema = new mongoose.Schema(
     mentorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Reference to the mentor for a mentee
-      required: function() {
-        return this.role === "mentee"; // MentorId is required only for mentees
-      }
+      default: null, // Default null if no mentor is assigned
     },
-    assignedMentor: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Reference to the assigned mentor for mentees
-      default: null, // Default null in case the mentee is not assigned yet
-    },
+    assignedMentees: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User", // Reference to mentees assigned to this mentor
+      },
+    ],
   },
   { timestamps: true }
 );
@@ -76,6 +75,56 @@ userSchema.methods.generateAuthToken = function () {
   });
 
   return accessToken;
+};
+
+// Static method to add a mentee to a mentor's assignedMentees list
+userSchema.statics.addMenteeToMentor = async function (mentorId, menteeId) {
+  const mentor = await this.findById(mentorId);
+  const mentee = await this.findById(menteeId);
+
+  if (!mentor || mentor.role !== "mentor") {
+    throw new Error("Invalid mentor ID or mentor does not exist.");
+  }
+
+  if (!mentee || mentee.role !== "mentee") {
+    throw new Error("Invalid mentee ID or mentee does not exist.");
+  }
+
+  if (mentee.mentorId) {
+    throw new Error("This mentee is already assigned to a mentor.");
+  }
+
+  // Assign the mentee to the mentor
+  mentee.mentorId = mentorId;
+  await mentee.save();
+
+  // Add the mentee to the mentor's assignedMentees array
+  mentor.assignedMentees.push(menteeId);
+  await mentor.save();
+};
+
+// Static method to remove a mentee from a mentor's assignedMentees list
+userSchema.statics.removeMenteeFromMentor = async function (mentorId, menteeId) {
+  const mentor = await this.findById(mentorId);
+  const mentee = await this.findById(menteeId);
+
+  if (!mentor || mentor.role !== "mentor") {
+    throw new Error("Invalid mentor ID or mentor does not exist.");
+  }
+
+  if (!mentee || mentee.role !== "mentee" || mentee.mentorId.toString() !== mentorId) {
+    throw new Error("This mentee is not assigned to this mentor.");
+  }
+
+  // Unassign the mentee
+  mentee.mentorId = null;
+  await mentee.save();
+
+  // Remove the mentee from the mentor's assignedMentees array
+  mentor.assignedMentees = mentor.assignedMentees.filter(
+    (id) => id.toString() !== menteeId.toString()
+  );
+  await mentor.save();
 };
 
 const User = mongoose.model("User", userSchema);

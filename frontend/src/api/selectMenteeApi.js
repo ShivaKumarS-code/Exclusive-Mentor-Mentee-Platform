@@ -1,39 +1,60 @@
-// src/utils/selectMenteeApi.js
-
 import axios from "axios";
 
-// Fetch the list of mentees for a specific mentor (assigned and unassigned)
-export const fetchAvailableMentees = async (mentorId) => {
+/**
+ * Fetches all unselected mentees available for assignment to a mentor.
+ * @returns {Promise<Array>} - Array of unselected mentees
+ */
+export const fetchUnselectedMentees = async () => {
   try {
-    const response = await axios.get(`/api/mentor/${mentorId}/mentees`);
-    return response.data.mentees; // Assuming the response contains a 'mentees' array
+    const token = localStorage.getItem("accessToken"); // Assuming the token is stored in localStorage after login
+    
+    if (!token) {
+      throw new Error("No authorization token found");
+    }
+
+    const response = await axios.get("/api/mentorships/available", {
+      headers: {
+        Authorization: `Bearer ${token}`, // Send the token as Bearer in the Authorization header
+      },
+    });
+
+    // If the API response has no 'mentees' key or it's empty, handle it
+    if (!response.data || !response.data.mentees || response.data.mentees.length === 0) {
+      throw new Error("No mentees available");
+    }
+
+    return response.data.mentees; // Return the mentees array from the response
   } catch (error) {
-    throw new Error("Error fetching available mentees: " + error.message);
+    console.error("Error fetching mentees:", error); // Log the error to see what's wrong
+    throw new Error("Error fetching unselected mentees: " + error.message);
   }
 };
 
-// Select a mentee for a mentor
-export const selectMentee = async (mentorId, menteeId) => {
-  try {
-    const response = await axios.post("/api/mentor/select", {
-      mentorId,
-      menteeId,
-    });
-    return response.data.message; // Return the message from the backend
-  } catch (error) {
-    throw new Error("Error selecting mentee: " + error.message);
-  }
-};
 
-// Unselect a mentee for a mentor
-export const unselectMentee = async (mentorId, menteeId) => {
+/**
+ * Adds a mentee to the mentor's list.
+ * @param {string} mentorId - The ID of the mentor
+ * @param {string} menteeId - The ID of the mentee to add
+ * @returns {Promise<Object>} - Returns the success message from the backend
+ */
+export const addMentee = async (mentorId, menteeId) => {
   try {
-    const response = await axios.post("/api/mentor/unselect", {
+    const token = localStorage.getItem("accessToken"); // Retrieve token from localStorage
+    
+    if (!token) {
+      throw new Error("No authorization token found");
+    }
+
+    const response = await axios.post("/api/mentorships/assign", {
       mentorId,
       menteeId,
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Send the token as Bearer in the Authorization header
+      },
     });
-    return response.data.message; // Return the message from the backend
+    return response.data.message; // Expecting a success message or updated mentor data
   } catch (error) {
-    throw new Error("Error unselecting mentee: " + error.message);
+    throw new Error("Error adding mentee: " + error.message);
   }
 };

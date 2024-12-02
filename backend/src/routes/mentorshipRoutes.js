@@ -1,20 +1,24 @@
 import express from "express";
 import {
-  getUnassignedMentees,
-  selectMenteeForMentor,
-  unselectMenteeForMentor,
+  getAvailableMentees,
+  assignMenteeToMentor,
+  unassignMenteeFromMentor,
+  getMenteesForMentor,
 } from "../controllers/mentorshipController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Fetch available (unassigned) mentees for a mentor
-router.get("/available-mentees", authMiddleware, getUnassignedMentees);
+// Fetch all available mentees (unassigned to any mentor)
+router.get("/available", authMiddleware, getAvailableMentees);
 
-// Select a mentee for a mentor
-router.post("/select", authMiddleware, selectMenteeForMentor);
+// Fetch all mentees assigned to a specific mentor
+router.get("/:mentorId", authMiddleware,  getMenteesForMentor);
 
-// Unselect a mentee for a mentor
-router.post("/unselect", authMiddleware, unselectMenteeForMentor);
+// Assign a mentee to a mentor
+router.post("/assign", authMiddleware, assignMenteeToMentor);
+
+// Unassign a mentee from a mentor
+router.post("/unassign", authMiddleware, unassignMenteeFromMentor);
 
 export default router;

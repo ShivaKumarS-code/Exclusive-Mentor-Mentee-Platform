@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../../components/Sidebar";
-import axios from "axios";
+import { fetchUnselectedMentees, addMentee } from "../../api/selectMenteeApi";
 
 const SelectMentee = () => {
   const [mentees, setMentees] = useState([]);
@@ -11,11 +11,12 @@ const SelectMentee = () => {
   useEffect(() => {
     const fetchMentees = async () => {
       try {
-        const response = await axios.get("/api/mentees/unselected"); // Assuming this endpoint returns unselected mentees
-        setMentees(response.data);
+        const unselectedMentees = await fetchUnselectedMentees();
+        // Assuming the response contains an object with a "mentees" array
+        setMentees(unselectedMentees); 
         setLoading(false);
       } catch (err) {
-        setError("Failed to fetch mentees");
+        setError("Failed to fetch unselected mentees");
         setLoading(false);
       }
     };
@@ -26,9 +27,13 @@ const SelectMentee = () => {
   // Function to add mentee to the mentor
   const handleSelectMentee = async (menteeId) => {
     try {
-      const response = await axios.post("/api/mentorships/select", { menteeId });
-      if (response.status === 200) {
-        setMentees(mentees.filter(mentee => mentee._id !== menteeId)); // Remove selected mentee from the list
+      const mentorId = "mentorId"; // Get the mentorId, probably from context or route params
+      const response = await addMentee(mentorId, menteeId);
+      if (response) {
+        // Use the functional form of setState to avoid stale state issues
+        setMentees((prevMentees) =>
+          prevMentees.filter((mentee) => mentee._id !== menteeId)
+        ); // Remove selected mentee from the list
       }
     } catch (err) {
       setError("Failed to select mentee");
@@ -39,7 +44,7 @@ const SelectMentee = () => {
     <div className="flex">
       <Sidebar role="mentor" />
       <div className="flex-grow p-6">
-        <h1 className="text-xl font-bold">Select Mentee</h1>
+        <h1 className="text-xl font-bold">Select</h1>
         {loading ? (
           <div>Loading mentees...</div>
         ) : error ? (
@@ -52,14 +57,14 @@ const SelectMentee = () => {
                 className="bg-white p-4 rounded-lg shadow-md flex justify-between items-center"
               >
                 <div>
-                  <h2 className="text-lg font-semibold">{mentee.name}</h2>
+                  <h2 className="text-lg font-semibold">{mentee.username}</h2>
                   <p className="text-gray-500">{mentee.email}</p>
                 </div>
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded-lg"
                   onClick={() => handleSelectMentee(mentee._id)}
                 >
-                  Select Mentee
+                  Select
                 </button>
               </div>
             ))}
