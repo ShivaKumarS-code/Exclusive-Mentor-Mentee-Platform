@@ -1,19 +1,22 @@
+// ViewFeedback.jsx
 import React from "react";
 import Sidebar from "../../components/Sidebar";
 import FeedbackView from "../../components/feedback/FeedbackView"; // Adjust the path based on your directory structure
 
 const ViewFeedback = () => {
   return (
-    <div className="flex">
+    <div className="flex h-screen bg-gray-100">
       {/* Sidebar for navigation */}
       <Sidebar role="mentor" />
 
       {/* Main content area */}
-      <div className="flex-grow p-6">
-        <h1 className="text-xl font-bold mb-4">View Feedback</h1>
+      <div className="flex-grow flex flex-col p-6">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">View Feedback</h1>
 
-        {/* Include FeedbackView Component */}
-        <FeedbackView />
+        {/* FeedbackView Component in a scrollable container */}
+        <div className="flex-grow">
+          <FeedbackView />
+        </div>
       </div>
     </div>
   );

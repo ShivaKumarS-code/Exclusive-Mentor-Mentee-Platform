@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { fetchFeedbacks } from "../../api/feedbackApi.js"; // Import the fetchFeedbacks function
+import { fetchFeedbacksForMentor } from "../../api/feedbackApi.js";
 
 const FeedbackView = () => {
   const [feedbacks, setFeedbacks] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch feedback data
     const fetchData = async () => {
       try {
-        const data = await fetchFeedbacks();
+        const data = await fetchFeedbacksForMentor();
         setFeedbacks(data);
-      } catch (error) {
-        console.error("Error fetching feedbacks:", error);
+      } catch (err) {
+        console.error("Error fetching feedbacks:", err);
+        setError(err.message);
       }
     };
 
@@ -19,38 +20,33 @@ const FeedbackView = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-semibold mb-6 text-center">
-        Feedback Received
-      </h2>
+    <div className="bg-white shadow-lg rounded-md overflow-hidden">
+      <div className="p-4 border-b bg-gray-50">
+        <h2 className="text-2xl font-bold text-gray-800 text-center">Feedback Received</h2>
+      </div>
 
-      {feedbacks.length > 0 ? (
-        feedbacks.map((feedback, index) => (
-          <div
-            key={index}
-            className="border p-6 mb-4 rounded-lg bg-gray-50 shadow-sm"
-          >
-            <p className="text-lg font-bold text-gray-800 mb-2">
-              Mentee: {feedback.menteeName}
-            </p>
-            <p className="text-gray-700 mb-2">
-              <span className="font-semibold">Feedback:</span> {feedback.text}
-            </p>
-            {feedback.attachment && (
-              <a
-                href={feedback.attachment}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 underline"
-              >
-                View Attachment
-              </a>
-            )}
-          </div>
-        ))
-      ) : (
-        <p className="text-gray-500 text-center">No feedback available.</p>
-      )}
+      {/* Scrollable content */}
+      <div className="max-h-96 overflow-y-auto p-4 space-y-4">
+        {error ? (
+          <p className="text-red-500 text-center">{error}</p>
+        ) : feedbacks.length > 0 ? (
+          feedbacks.map((feedback) => (
+            <div
+              key={feedback._id}
+              className="p-4 border rounded-md shadow-sm bg-gray-100 hover:bg-gray-200 transition"
+            >
+              <p className="font-semibold text-gray-700 mb-1">
+                Mentee: {feedback.mentee?.email || "Anonymous"}
+              </p>
+              <p className="text-gray-800">
+                <span className="font-semibold">Feedback:</span> {feedback.text}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500 text-center">No feedback available.</p>
+        )}
+      </div>
     </div>
   );
 };
