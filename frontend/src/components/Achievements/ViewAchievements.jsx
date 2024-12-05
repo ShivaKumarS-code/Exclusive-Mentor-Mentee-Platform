@@ -1,66 +1,75 @@
-import React, { useEffect, useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react"; 
+import { useNavigate } from "react-router-dom";
+import { viewSelfAchievements, viewMenteesAchievements } from "../../api/achievementApi"; // Import the correct API functions
 
 const ViewAchievements = () => {
-  const [achievements, setAchievements] = useState([]); // State to store achievements
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
-
-  const location = useLocation();
-  const userRole = localStorage.getItem("userRole"); // Assume role is stored in localStorage
+  const [achievements, setAchievements] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const userRole = localStorage.getItem("role");
 
   useEffect(() => {
-    // Replace with your API endpoint
     const fetchAchievements = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        const response = await fetch("/api/achievements"); // Replace with actual API endpoint
-        if (!response.ok) {
-          throw new Error("Failed to fetch achievements");
+        let data;
+        if (userRole === "mentee") {
+          data = await viewSelfAchievements(); // Fetch mentee's own achievements
+        } else {
+          data = await viewMenteesAchievements(); // Fetch assigned mentees' achievements for mentors
         }
-        const data = await response.json();
-        setAchievements(data); // Set the fetched achievements
+        setAchievements(data);
       } catch (err) {
-        setError(err.message); // Set error if the fetch fails
+        setError(err.message || "Failed to fetch achievements");
       } finally {
-        setLoading(false); // Set loading to false after fetching
+        setLoading(false);
       }
     };
 
-    fetchAchievements(); // Call the fetch function
-  }, []);
+    fetchAchievements();
+  }, [userRole]);
+
+  const handleBack = () => {
+    if (userRole === "mentee") {
+      navigate("/mentee/achievements");
+    } else {
+      navigate("/");
+    }
+  };
 
   return (
-    <div className="p-6 bg-gray-100 h-screen">
-      {/* Default heading for Mentees Achievements */}
-      <h1 className="text-2xl font-bold text-center mb-6">Mentees Achievements</h1>
-
+    <div className="p-6 bg-gray-100 min-h-screen">
+      {userRole === "mentee" && (
+        <button
+          onClick={handleBack}
+          className="mb-6 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800"
+        >
+          Back
+        </button>
+      )}
+      <h1 className="text-2xl font-bold text-center mb-6">
+        {userRole === "mentee" ? "Your Achievements" : "Mentees' Achievements"}
+      </h1>
       <div className="space-y-4 max-w-2xl mx-auto">
-        {loading && <div>Loading...</div>} {/* Show loading text while fetching data */}
-        
-        {error && <div>Error: {error}</div>} {/* Show error message if fetching fails */}
-
+        {loading && <div className="text-center">Loading...</div>}
+        {error && <div className="text-center text-red-500">Error: {error}</div>}
         {achievements.length > 0 ? (
           achievements.map((achievement) => (
             <div
-              key={achievement.id}
+              key={achievement._id} // Use the unique _id field for the key
               className="bg-white shadow-md p-4 rounded-lg border border-gray-200"
             >
-              <h3 className="text-xl font-semibold text-gray-800">{achievement.menteeName}</h3>
-              <p className="text-gray-700 mt-2">{achievement.text}</p>
+              <h3 className="text-xl font-semibold text-gray-800">
+                Mentee Name: {achievement.mentee?.username || "Anonymous"} {/* Display mentee's name */}
+              </h3>
+              <p className="text-gray-700 mt-2">Achievement: {achievement.achievementText}</p>
             </div>
           ))
         ) : (
           <p className="text-center text-gray-600">No achievements to display.</p>
-        )}
-
-        {/* Conditionally render the "Add More Achievements" button for mentees only */}
-        {userRole === "mentee" && (
-          <button
-            onClick={() => Navigate("/mentee/achievements")}
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200 mt-4"
-          >
-            Add More Achievements
-          </button>
         )}
       </div>
     </div>

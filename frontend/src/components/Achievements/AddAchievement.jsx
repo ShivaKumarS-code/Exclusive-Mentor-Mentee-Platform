@@ -1,57 +1,32 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { uploadAchievement } from "../../api/achievementApi"; // Import the correct API function
 
 const AddAchievement = () => {
-  const [achievements, setAchievements] = useState([]); // List of achievements
   const [achievementInput, setAchievementInput] = useState(""); // Input field value
-  const [editMode, setEditMode] = useState(false); // Track if we are editing an achievement
-  const [currentEditId, setCurrentEditId] = useState(null); // Track which achievement is being edited
+  const [loading, setLoading] = useState(false); // Loading state for API call
+  const [error, setError] = useState(null); // Error state for API call
   const navigate = useNavigate();
 
-  // Add a new achievement or update an existing one
-  const handleAddOrUpdateAchievement = () => {
+  // Add a new achievement using the API
+  const handleAddAchievement = async () => {
     if (achievementInput.trim() === "") return; // Prevent empty submissions
+    setLoading(true);
+    setError(null);
 
-    if (editMode) {
-      // Update the existing achievement
-      setAchievements((prevAchievements) =>
-        prevAchievements.map((achievement) =>
-          achievement.id === currentEditId
-            ? { ...achievement, text: achievementInput } // Modify the achievement text
-            : achievement
-        )
-      );
-      setEditMode(false); // Exit edit mode
-      setCurrentEditId(null); // Clear the ID
-    } else {
-      // Add the new achievement
-      setAchievements([
-        ...achievements,
-        {
-          id: Date.now(), // Unique ID for each achievement
-          text: achievementInput,
-        },
-      ]);
+    try {
+      await uploadAchievement(achievementInput); // Call the API function for adding achievement
+      setAchievementInput(""); // Clear the input field
+      alert("Achievement added successfully!");
+    } catch (err) {
+      setError(err.message || "Failed to add achievement");
+    } finally {
+      setLoading(false);
     }
-
-    setAchievementInput(""); // Clear the input field
-  };
-
-  // Start editing an achievement
-  const handleEditAchievement = (id, text) => {
-    setEditMode(true); // Enable edit mode
-    setCurrentEditId(id); // Set the ID of the achievement to be edited
-    setAchievementInput(text); // Set the input field to the current achievement text
-  };
-
-  // Delete an achievement
-  const handleDeleteAchievement = (id) => {
-    setAchievements(achievements.filter((achievement) => achievement.id !== id));
   };
 
   const handleViewAchievements = () => {
-    // Navigate to ViewAchievements and pass achievements as state
-    navigate("/mentee/viewAchievements", { state: { achievements } });
+    navigate("/mentee/view-achievements");
   };
 
   return (
@@ -66,12 +41,20 @@ const AddAchievement = () => {
           className="w-full p-3 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring focus:ring-blue-300"
         />
         <button
-          onClick={handleAddOrUpdateAchievement}
+          onClick={handleAddAchievement}
           className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200 mb-4"
+          disabled={loading}
         >
-          {editMode ? "Update Achievement" : "Submit Achievement"}
+          {loading ? "Submitting..." : "Submit Achievement"}
         </button>
-
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        {/* View Achievements Button */}
+        <button
+          onClick={handleViewAchievements}
+          className="w-full bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-800 transition duration-200"
+        >
+          View Achievements
+        </button>
       </div>
     </div>
   );

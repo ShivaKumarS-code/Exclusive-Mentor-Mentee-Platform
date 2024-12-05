@@ -6,8 +6,7 @@ const MentorChat = () => {
   return (
     <div className="flex">
       <Sidebar role="mentor" />
-      <div className="flex-grow p-6">
-        <h1 className="text-xl font-bold mb-4">Mentor Chat</h1>
+      <div className="flex-grow">
         {/* Render ChatBox component */}
         <ChatBox role="mentor" />
       </div>

@@ -12,6 +12,11 @@ const appointmentSchema = new mongoose.Schema(
       ref: "User", // Reference to the User model (who receives the appointment)
       required: true,
     },
+    role: {
+      type: String,
+      enum: ["mentor", "mentee"], // Specifies the role of the user making the request
+      required: true,
+    },
     date: {
       type: Date,
       required: true,

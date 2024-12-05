@@ -47,9 +47,9 @@ const ViewAppointment = () => {
   const handleBack = () => {
     const userRole = localStorage.getItem('role'); // Assumes role is stored in localStorage
     if (userRole === 'mentor') {
-      navigate('/mentor/dashboard');
+      navigate('/mentor/appointments');
     } else if (userRole === 'mentee') {
-      navigate('/mentee/dashboard');
+      navigate('/mentee/appointments');
     } else {
       navigate('/'); // Default fallback
     }
