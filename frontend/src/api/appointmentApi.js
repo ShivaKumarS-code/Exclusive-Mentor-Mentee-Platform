@@ -1,58 +1,61 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+const API_URL = '/api/appointments'; // Base URL for appointments
 
-// Get the token from localStorage
-const getAuthToken = () => {
-  return localStorage.getItem('token'); // Ensure this matches your login implementation
-};
+// Create a new appointment (either as mentee or mentor)
+export const submitAppointment = async (formData) => {
+  const { date, time, reason, mentee, mentor } = formData;
+  const receiverId = mentee || mentor; // Set the receiver as mentee or mentor based on role
 
-// Submit an appointment
-export const submitAppointment = async (appointmentData) => {
   try {
     const response = await axios.post(
-      `${API_BASE_URL}/appointments`,
-      appointmentData,
+      API_URL,
+      {
+        date,
+        time,
+        reason,
+        receiverId,
+      },
       {
         headers: {
-          Authorization: `Bearer ${getAuthToken()}`, // Include the token
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       }
     );
     return response.data;
   } catch (error) {
-    throw error.response?.data?.message || 'Failed to submit appointment';
+    throw new Error(error.response?.data?.message || 'Error creating appointment');
   }
 };
 
-// Fetch appointments (sent by other users)
+// Get appointments for the current user
 export const fetchAppointments = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/appointments/received`, {
+    const response = await axios.get(API_URL, {
       headers: {
-        Authorization: `Bearer ${getAuthToken()}`, // Include the token
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
     });
     return response.data;
   } catch (error) {
-    throw error.response?.data?.message || 'Failed to fetch appointments';
+    throw new Error(error.response?.data?.message || 'Error fetching appointments');
   }
 };
 
-// Update appointment status (approved/denied)
+// Update appointment status (Accept/Reject)
 export const updateAppointmentStatus = async (appointmentId, status) => {
   try {
-    const response = await axios.put(
-      `${API_BASE_URL}/appointments/${appointmentId}/status`,
+    const response = await axios.patch(
+      `${API_URL}/${appointmentId}`,
       { status },
       {
         headers: {
-          Authorization: `Bearer ${getAuthToken()}`, // Include the token
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       }
     );
     return response.data;
   } catch (error) {
-    throw error.response?.data?.message || 'Failed to update appointment status';
+    throw new Error(error.response?.data?.message || 'Error updating appointment status');
   }
 };

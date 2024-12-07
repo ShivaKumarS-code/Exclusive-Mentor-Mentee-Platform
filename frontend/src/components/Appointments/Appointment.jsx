@@ -1,36 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { submitAppointment } from '../../api/appointmentApi';
+import axios from 'axios';
 
 const Appointment = () => {
   const [formData, setFormData] = useState({
     date: '',
     time: '',
     reason: '',
+    mentee: '',
+    mentor: '', // For mentee, populated automatically
   });
-  const [appointmentStatus, setAppointmentStatus] = useState(''); // Approving, Approved, or Denied
-  const navigate = useNavigate(); // Hook to navigate between routes
+  const [assignedMentees, setAssignedMentees] = useState([]);
+  const [statusMessage, setStatusMessage] = useState('');
+  const navigate = useNavigate();
+
+  const userRole = localStorage.getItem('role');
+  const accessToken = localStorage.getItem('accessToken');
+  
+  const parseJwt = (token) => {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const decoded = JSON.parse(atob(base64));
+      return decoded;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const userId = accessToken ? parseJwt(accessToken)?.id : null;
+
+  useEffect(() => {
+    if (userRole === 'mentor' && userId) {
+      axios.get(`/api/appointments/assigned-mentees`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
+        .then((response) => setAssignedMentees(response.data))
+        .catch((error) => console.error('Error fetching mentees:', error));
+    } else if (userRole === 'mentee' && userId) {
+      // Fetch assigned mentor for mentee
+      axios.get(`/api/appointments/mentor`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
+        .then((response) => setFormData((prev) => ({ ...prev, mentor: response.data._id })))
+        .catch((error) => console.error('Error fetching mentor:', error));
+    }
+  }, [userRole, userId, accessToken]);
+  
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Make API call to submit the appointment
-    console.log('Appointment submitted:', formData);
-    setAppointmentStatus('Approving');
+    try {
+      if (userRole === 'mentor' && !formData.mentee) {
+        setStatusMessage('Please select a mentee.');
+        return;
+      }
+      await submitAppointment(formData);
+      setStatusMessage('Appointment successfully submitted!');
+    } catch (error) {
+      setStatusMessage(error.message);
+    }
   };
 
   const handleViewAppointments = () => {
-    // Get role from localStorage
-    const userRole = localStorage.getItem('role'); // Assumes 'role' is stored in localStorage
-    if (userRole === 'mentor') {
-      navigate('/mentor/view-appointments'); // Mentor-specific route
-    } else if (userRole === 'mentee') {
-      navigate('/mentee/view-appointments'); // Mentee-specific route
-    } else {
-      console.error('Invalid role detected or role not set in localStorage.');
-    }
+    navigate(userRole === 'mentor' ? '/mentor/view-appointments' : '/mentee/view-appointments');
   };
 
   return (
@@ -69,6 +107,25 @@ const Appointment = () => {
             required
           />
         </div>
+        {userRole === 'mentor' && (
+          <div>
+            <label className="block text-gray-700">Select Mentee</label>
+            <select
+              name="mentee"
+              value={formData.mentee}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-lg"
+              required
+            >
+              <option value="">Select a mentee</option>
+              {assignedMentees.map((mentee) => (
+                <option key={mentee._id} value={mentee._id}>
+                  {mentee.username} ({mentee.email})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
         <button
           type="submit"
           className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
@@ -76,11 +133,7 @@ const Appointment = () => {
           Submit
         </button>
       </form>
-      {appointmentStatus && (
-        <p className="mt-4 text-gray-700">
-          Status: <span className="font-bold">{appointmentStatus}</span>
-        </p>
-      )}
+      {statusMessage && <p className="mt-4 text-gray-700">{statusMessage}</p>}
       <button
         onClick={handleViewAppointments}
         className="mt-6 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800"

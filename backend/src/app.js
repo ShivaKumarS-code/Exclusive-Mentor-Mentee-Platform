@@ -3,7 +3,8 @@ import cors from "cors";
 import authRoutes from './routes/authRoutes.js';
 import mentorshipRoutes from "./routes/mentorshipRoutes.js";
 import feedbackRoutes from "./routes/feedbackRoutes.js";
-import achievementRoutes from "./routes/achievementRoutes.js";
+import achievementRoutes from "./routes/achievementsRoutes.js";
+import appointmentsRoutes from "./routes/appointmentsRoutes.js"
 
 const app = express();
 
@@ -20,5 +21,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/mentorships', mentorshipRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/achievements", achievementRoutes);
+app.use("/api/appointments", appointmentsRoutes);
 
 export { app };
