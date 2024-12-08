@@ -4,7 +4,7 @@ import authRoutes from './routes/authRoutes.js';
 import mentorshipRoutes from "./routes/mentorshipRoutes.js";
 import feedbackRoutes from "./routes/feedbackRoutes.js";
 import achievementRoutes from "./routes/achievementsRoutes.js";
-import appointmentsRoutes from "./routes/appointmentsRoutes.js"
+import appointmentsRoutes from "./routes/appointmentsRoutes.js";
 
 const app = express();
 

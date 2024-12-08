@@ -2,7 +2,6 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FaClipboardList,
-  FaComments,
   FaTrophy,
   FaUserAlt,
   FaChalkboardTeacher,
@@ -84,17 +83,6 @@ const Sidebar = ({ role }) => {
             >
               <FaTrophy className="text-xl" />
               <span>Achievements</span>
-            </Link>
-          </li>
-
-          {/* Chat */}
-          <li className="mb-6">
-            <Link
-              to={`/${role}/chat`}
-              className="flex items-center space-x-4 hover:bg-gray-700 p-2 rounded-lg transition duration-200"
-            >
-              <FaComments className="text-xl" />
-              <span>Chat</span>
             </Link>
           </li>
 

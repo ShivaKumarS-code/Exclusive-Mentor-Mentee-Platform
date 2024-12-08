@@ -7,7 +7,6 @@ import PrivateRoute from "./components/PrivateRoute";
 import MenteeDashboard from "./pages/mentee/MenteeDashboard";
 import MenteeAppointment from "./pages/mentee/MenteeAppointment";
 import Achievement from "./pages/mentee/Achievement";
-import MenteeChat from "./pages/mentee/MenteeChat";
 import Feedback from "./pages/mentee/Feedback";
 
 import MentorDashboard from "./pages/mentor/MentorDashboard";
@@ -15,7 +14,6 @@ import YourMentee from "./pages/mentor/YourMentee";
 import SelectMentee from "./pages/mentor/SelectMentee";
 import MentorAppointment from "./pages/mentor/MentorAppointment";
 import MenteesAchievement from "./pages/mentor/MenteesAchievement";
-import MentorChat from "./pages/mentor/MentorChat";
 import ViewFeedback from "./pages/mentor/ViewFeedback";
 import ViewAppointment from "./components/Appointments/viewAppointment";
 import ViewAchievements from "./components/Achievements/ViewAchievements";
@@ -85,15 +83,6 @@ const App = () => {
         />
 
         <Route
-          path="/mentor/chat"
-          element={
-            <PrivateRoute role="mentor">
-              <MentorChat />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
           path="/mentor/feedback"
           element={
             <PrivateRoute role="mentor">
@@ -144,15 +133,6 @@ const App = () => {
           element={
             <PrivateRoute role="mentee">
               <ViewAchievements />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/mentee/chat"
-          element={
-            <PrivateRoute role="mentee">
-              <MenteeChat />
             </PrivateRoute>
           }
         />
