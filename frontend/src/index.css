@@ -1,3 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*{
+    font-family: "DM Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+html,body,#root {
+    width: 100%;
+    height: 100%;
+    background-image: url('../public/images/bg2.jpg');
+    background-position: center;
+    background-size: cover;
+    overflow: hidden;
+  }
+  
+.font1 {
+    font-family: "Bebas Neue", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#loginBg {
+    background-image: url('../public/images/bg2.jpg');
+    background-position: center;
+    background-size: cover;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #3f3f46 inset !important; /* Background: zinc-700 */
+    -webkit-text-fill-color: white !important; /* Text and cursor color */
+    caret-color: white !important; /* Cursor color */
+    transition: background-color 5000s ease-in-out 0s;
+  }
+ 
+.leaves {
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    pointer-events: none;
+    
+}
+
+.leaves .set {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.leaves .set div {
+    position: absolute;
+    display: block;
+}
+
+.leaves .set div:nth-child(1) {
+    left: 20%;
+    animation: animate 20s linear infinite;
+}
+
+.leaves .set div:nth-child(2) {
+    left: 50%;
+    animation: animate 14s linear infinite;
+}
+
+.leaves .set div:nth-child(3) {
+    left: 70%;
+    animation: animate 12s linear infinite;
+}
+
+.leaves .set div:nth-child(4) {
+    left: 5%;
+    animation: animate 15s linear infinite;
+}
+
+.leaves .set div:nth-child(5) {
+    left: 85%;
+    animation: animate 18s linear infinite;
+}
+
+.leaves .set div:nth-child(6) {
+    left: 90%;
+    animation: animate 12s linear infinite;
+}
+
+.leaves .set div:nth-child(7) {
+    left: 15%;
+    animation: animate 14s linear infinite;
+}
+
+.leaves .set div:nth-child(8) {
+    left: 60%;
+    animation: animate 15s linear infinite;
+}
+
+@keyframes animate {
+    0% {
+        opacity: 0;
+        top: -10%;
+        transform: translateX(20px) rotate(0deg);
+    }
+    10% {
+        opacity: 1;
+    }
+    20% {
+        transform: translateX(-20px) rotate(45deg);
+    }
+    40% {
+        transform: translateX(-20px) rotate(90deg);
+    }
+    60% {
+        transform: translateX(20px) rotate(180deg);
+    }
+    80% {
+        transform: translateX(-20px) rotate(45deg);
+    }
+    100% {
+        top: 110%;
+        transform: translateX(20px) rotate(225deg);
+    }
+}
