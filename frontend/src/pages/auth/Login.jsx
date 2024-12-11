@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import logo from '../../../public/images/r4.png';
+import leaf1 from '../../../public/images/leaf_01.png';
+import leaf2 from '../../../public/images/leaf_02.png';
+import leaf3 from '../../../public/images/leaf_03.png';
+import leaf4 from '../../../public/images/leaf_04.png';
+import { easeInOut, motion } from 'framer-motion';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -56,12 +62,25 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex flex-col items-center justify-center">
+      <div className="leaves">
+        <div className="set">
+           <div><img src={leaf1} /></div>
+           <div><img src={leaf2} /></div>
+           <div><img src={leaf3} /></div>
+           <div><img src={leaf4} /></div>
+           <div><img src={leaf1} /></div>
+           <div><img src={leaf2} /></div>
+           <div><img src={leaf3} /></div>
+           <div><img src={leaf4} /></div>
+         </div>
+      </div>
+    <div className="w-[900px] border-2 border-zinc-800 h-full relative overflow-hidden flex flex-col rounded-3xl" id="loginBg">
       <form
-        className="bg-white p-6 rounded shadow-md w-full max-w-md"
+        className=" ml-[30px] p-6 rounded w-full max-w-md"
         onSubmit={handleSubmit}
       >
-        <h1 className="text-xl font-bold mb-4">Login</h1>
+        <h1 className="text-[40px] font1 text-[#FFAB02] text-center font-bold mb-[15px]">Login</h1>
 
         {/* Show error/success message */}
         {message && (
@@ -84,7 +103,8 @@ const Login = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-200"
+            placeholder="Enter your email"
+            className="w-full px-3 mb-[15px] bg-zinc-700 text-white py-2 border rounded-lg focus:ring focus:ring-[#AAFF01]"
             required
           />
         </div>
@@ -99,7 +119,8 @@ const Login = () => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-200"
+            placeholder="Enter your password"
+            className="w-full px-3 py-2 border mb-[15px] bg-zinc-700 text-white rounded-lg focus:ring focus:ring-[#AAFF01]"
             required
           />
         </div>
@@ -111,8 +132,8 @@ const Login = () => {
               type="button"
               onClick={() => setUserRole("mentee")}
               className={`px-3 py-1 ${
-                userRole === "mentee" ? "bg-blue-500 text-white" : "bg-gray-200"
-              } rounded hover:bg-gray-300`}
+                userRole === "mentee" ? "bg-[#AAFF01] text-black" : "bg-gray-200 text-zinc-500"
+              } rounded-full`}
             >
               Mentee
             </button>
@@ -120,8 +141,8 @@ const Login = () => {
               type="button"
               onClick={() => setUserRole("mentor")}
               className={`px-3 py-1 ml-2 ${
-                userRole === "mentor" ? "bg-blue-500 text-white" : "bg-gray-200"
-              } rounded hover:bg-gray-300`}
+                userRole === "mentor" ? "bg-[#01ff12] text-black" : "bg-gray-200 text-zinc-500"
+              } rounded-full`}
             >
               Mentor
             </button>
@@ -130,21 +151,39 @@ const Login = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 disabled:opacity-50"
+          className="w-full mt-[15px] bg-yellow-500 text-black hover:text-white py-2 rounded-2xl hover:bg-yellow-600 disabled:opacity-50"
           disabled={isLoading} // Disable button while loading
         >
           {isLoading ? "Logging in..." : "Login"}
         </button>
       </form>
 
+      <div className="absolute w-[450px] flex justify-center items-center h-full right-0">
+      <motion.img
+                  src={logo}
+                  animate={{
+                    y: [0, -20, 0],
+                  }}
+                  transition={{
+                    duration: 3,
+                    delay: 1,
+                    repeat: Infinity,
+                    ease: easeInOut,
+                    repeatType: 'reverse',
+                  }}
+                  
+                />
+      </div>
+
       {/* Link to Register Page */}
-      <p className="mt-4">
+      <p className="mt-4 z-10 text-center mb-[30px]">
         Don’t have an account?{" "}
-        <Link to="/register" className="text-blue-500 hover:underline">
+        <Link to="/register" className="text-blue-500 hover:text-[#AAFF01] hover:underline">
           Register here
         </Link>
       </p>
     </div>
+  </div>
   );
 };
 
