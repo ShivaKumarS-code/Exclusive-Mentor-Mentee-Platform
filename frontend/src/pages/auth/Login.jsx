@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import logo from '../../../public/images/r4.png';
-import leaf1 from '../../../public/images/leaf_01.png';
-import leaf2 from '../../../public/images/leaf_02.png';
-import leaf3 from '../../../public/images/leaf_03.png';
-import leaf4 from '../../../public/images/leaf_04.png';
+import logo from '../../assets/images/r4.png';
+import leaf1 from '../../assets/images/leaf_01.png';
+import leaf2 from '../../assets/images/leaf_02.png';
+import leaf3 from '../../assets/images/leaf_03.png';
+import leaf4 from '../../assets/images/leaf_04.png';
 import { easeInOut, motion } from 'framer-motion';
 
 const Login = () => {
