@@ -4,16 +4,16 @@ import { fetchUnselectedMentees, addMentee } from "../../api/selectMenteeApi";
 
 const SelectMentee = () => {
   const [mentees, setMentees] = useState([]);
+  const [filteredMentees, setFilteredMentees] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch unselected mentees
   useEffect(() => {
     const fetchMentees = async () => {
       try {
         const unselectedMentees = await fetchUnselectedMentees();
-        // Assuming the response contains an object with a "mentees" array
-        setMentees(unselectedMentees); 
+        setMentees(unselectedMentees);
         setLoading(false);
       } catch (err) {
         setError("Failed to fetch unselected mentees");
@@ -24,44 +24,65 @@ const SelectMentee = () => {
     fetchMentees();
   }, []);
 
-  // Function to add mentee to the mentor
   const handleSelectMentee = async (menteeId) => {
     try {
-      const mentorId = "mentorId"; // Get the mentorId, probably from context or route params
+      const mentorId = "mentorId"; // Adjust accordingly
       const response = await addMentee(mentorId, menteeId);
       if (response) {
-        // Use the functional form of setState to avoid stale state issues
-        setMentees((prevMentees) =>
-          prevMentees.filter((mentee) => mentee._id !== menteeId)
-        ); // Remove selected mentee from the list
+        setMentees((prev) => prev.filter((mentee) => mentee._id !== menteeId));
+        setFilteredMentees((prev) =>
+          prev.filter((mentee) => mentee._id !== menteeId)
+        );
       }
     } catch (err) {
       setError("Failed to select mentee");
     }
   };
 
+  const handleSearch = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+
+    const filtered = mentees.filter((mentee) =>
+      mentee.username.toLowerCase().includes(value)
+    );
+    setFilteredMentees(filtered);
+  };
+
   return (
     <div className="flex">
       <Sidebar role="mentor" />
-      <div className="flex-grow p-6">
-        <h1 className="text-xl font-bold">Select</h1>
+      <div className="flex-grow p-6 text-white bg-black border-l-4 border-purple-700 rounded-l-[50px]">
+        <h1 className="text-[30px] font2 translate-y-[20px] font-bold mb-4">Select Mentees</h1>
+
+        {/* Search bar */}
+        <input
+          type="text"
+          placeholder="Search mentees by name..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className="w-full mt-[20px] p-2 mb-6 bg-zinc-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+        />
+
         {loading ? (
           <div>Loading mentees...</div>
         ) : error ? (
           <div>{error}</div>
+        ) : searchTerm && filteredMentees.length === 0 ? (
+          <div>No mentees found.</div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mentees.map((mentee) => (
+            {(searchTerm ? filteredMentees : []).map((mentee) => (
               <div
                 key={mentee._id}
-                className="bg-white p-4 rounded-lg shadow-md flex justify-between items-center"
+                className="bg-zinc-800 p-4 rounded-lg shadow-md flex justify-between items-center"
               >
                 <div>
                   <h2 className="text-lg font-semibold">{mentee.username}</h2>
-                  <p className="text-gray-500">{mentee.email}</p>
+                  <p className="text-blue-500">{mentee.email}</p>
                 </div>
                 <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                  className="bg-yellow-500 text-black px-4 py-2 rounded-lg"
                   onClick={() => handleSelectMentee(mentee._id)}
                 >
                   Select

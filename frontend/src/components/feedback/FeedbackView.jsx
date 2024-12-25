@@ -9,6 +9,7 @@ const FeedbackView = () => {
     const fetchData = async () => {
       try {
         const data = await fetchFeedbacksForMentor();
+        console.log(data)
         setFeedbacks(data);
       } catch (err) {
         console.error("Error fetching feedbacks:", err);
@@ -19,10 +20,11 @@ const FeedbackView = () => {
     fetchData();
   }, []);
 
+
   return (
-    <div className="bg-white shadow-lg rounded-md overflow-hidden">
-      <div className="p-4 border-b bg-gray-50">
-        <h2 className="text-2xl font-bold text-gray-800 text-center">Feedback Received</h2>
+    <div className="bg-zinc-900 shadow-lg rounded-3xl overflow-hidden">
+      <div className="p-4 border-b text-white">
+        <h2 className="text-2xl font-bold text-center">Feedback Received</h2>
       </div>
 
       {/* Scrollable content */}
@@ -33,12 +35,12 @@ const FeedbackView = () => {
           feedbacks.map((feedback) => (
             <div
               key={feedback._id}
-              className="p-4 border rounded-md shadow-sm bg-gray-100 hover:bg-gray-200 transition"
+              className="p-4 border border-purple-500 rounded-xl shadow-sm bg-zinc-700 hover:bg-zinc-800 transition"
             >
-              <p className="font-semibold text-gray-700 mb-1">
+              <p className="font-semibold text-white mb-1">
                 Mentee: {feedback.mentee?.email || "Anonymous"}
               </p>
-              <p className="text-gray-800">
+              <p className="text-blue-500">
                 <span className="font-semibold">Feedback:</span> {feedback.text}
               </p>
             </div>
@@ -51,4 +53,5 @@ const FeedbackView = () => {
   );
 };
 
-export default FeedbackView;
+export default FeedbackView; 
+ 

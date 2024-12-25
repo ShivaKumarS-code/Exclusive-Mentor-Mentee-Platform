@@ -72,49 +72,49 @@ const Appointment = () => {
   };
 
   return (
-    <div className="p-6 max-w-md mx-auto bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">Schedule an Appointment</h2>
+    <div className="p-6 max-w-md mx-auto translate-y-6 border-2 border-yellow-500 bg-zinc-700 rounded-3xl">
+      <h2 className="text-2xl text-white font-semibold mb-4">Schedule <span className='text-pink-500'>an</span>  Appointment</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-700">Date</label>
+          <label className="block text-white">Date</label>
           <input
             type="date"
             name="date"
             value={formData.date}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-lg"
+            className="w-full px-3 py-2 bg-zinc-500 border rounded-lg"
             required
           />
         </div>
         <div>
-          <label className="block text-gray-700">Time</label>
+          <label className="block text-white">Time</label>
           <input
             type="time"
             name="time"
             value={formData.time}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-lg"
+            className="w-full px-3 bg-zinc-500 py-2 border rounded-lg"
             required
           />
         </div>
         <div>
-          <label className="block text-gray-700">Reason</label>
+          <label className="block text-white">Reason</label>
           <textarea
             name="reason"
             value={formData.reason}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-lg"
+            className="w-full px-3 py-2 border bg-zinc-500 rounded-lg"
             required
           />
         </div>
         {userRole === 'mentor' && (
           <div>
-            <label className="block text-gray-700">Select Mentee</label>
+            <label className="block text-white ">Select Mentee</label>
             <select
               name="mentee"
               value={formData.mentee}
               onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg"
+              className="w-full px-3 py-2 bg-zinc-500 border rounded-lg"
               required
             >
               <option value="">Select a mentee</option>
@@ -128,15 +128,15 @@ const Appointment = () => {
         )}
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+          className="bg-purple-500 text-black hover:text-white px-4 py-2 rounded-lg hover:bg-purple-600"
         >
           Submit
         </button>
       </form>
-      {statusMessage && <p className="mt-4 text-gray-700">{statusMessage}</p>}
+      {statusMessage && <p className="mt-4 text-blue-400">{statusMessage}</p>}
       <button
         onClick={handleViewAppointments}
-        className="mt-6 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800"
+        className="mt-6 bg-yellow-500 text-black hover:text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
       >
         View Appointments
       </button>

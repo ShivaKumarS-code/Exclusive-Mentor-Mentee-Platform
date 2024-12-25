@@ -33,16 +33,16 @@ const MenteeDashboard = () => {
   return (
     <div className="flex h-screen">
       <Sidebar role="mentee" />
-      <div className="flex-1 p-8 bg-gray-100 overflow-y-auto">
-        <h1 className="text-3xl font-bold mb-4">Welcome, Mentee</h1>
-        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-          <h2 className="text-2xl font-semibold mb-4">Your Appointments</h2>
+      <div className="flex-1 p-8 text-white bg-black border-l-4 border-purple-700 rounded-l-[50px] overflow-y-auto">
+        <h1 className="text-3xl font2 font-bold mb-4">Welcome, <span className='text-pink-400'>Mentee!</span></h1>
+        <div className="p-6 rounded-3xl shadow-md mb-6 bg-black">
+          <h2 className="text-2xl font2 font-semibold mb-4">Upcoming Appointments</h2>
           {appointments.length === 0 ? (
-            <p className="text-gray-700">No appointments available at the moment.</p>
+            <p className="text-blue-700">No appointments available at the moment.</p>
           ) : (
             <ul className="space-y-4">
               {appointments.map((appointment) => (
-                <li key={appointment._id} className="p-4 bg-gray-100 rounded-lg">
+                <li key={appointment._id} className="p-4 bg-zinc-700 rounded-3xl border border-yellow-500">
                   <p><strong>Date:</strong> {appointment.date}</p>
                   <p><strong>Time:</strong> {appointment.time}</p>
                   <p><strong>Reason:</strong> {appointment.reason}</p>

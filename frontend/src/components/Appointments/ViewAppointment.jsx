@@ -43,42 +43,47 @@ const ViewAppointment = () => {
   };
 
   return (
-    <div className="p-6 max-w-md mx-auto bg-white rounded-lg shadow-md">
+    <div className='w-full h-screen bg-black text-white'>
+    <div className="p-6 max-w-md mx-auto border-2 border-yellow-500 translate-y-[100px] bg-zinc-900 rounded-3xl">
       <button
         onClick={handleBack}
-        className="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800"
+        className="bg-blue-800 text-white px-4 py-2 rounded-lg hover:bg-blue-900"
       >
         Back
       </button>
       <h2 className="text-2xl font-semibold mt-4">Your Appointments</h2>
-      <ul className="space-y-4 mt-4">
-        {appointments.map((appointment) => (
-          <li key={appointment._id} className="p-4 bg-gray-100 rounded-lg">
-            <p><strong>Date:</strong> {appointment.date}</p>
-            <p><strong>Time:</strong> {appointment.time}</p>
-            <p><strong>Reason:</strong> {appointment.reason}</p>
-            <p><strong>Status:</strong> {appointment.status}</p>
-            {appointment.status === 'Pending' && (
-              <div className="space-x-4 mt-2">
-                <button
-                  onClick={() => handleAction(appointment._id, 'Accepted')}
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
-                >
-                  Accept
-                </button>
-                <button
-                  onClick={() => handleAction(appointment._id, 'Rejected')}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-                >
-                  Reject
-                </button>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
+      <div className="mt-4 max-h-80 overflow-y-auto">
+        <ul className="space-y-4">
+          {appointments.map((appointment) => (
+            <li key={appointment._id} className="p-4 bg-zinc-700 rounded-lg">
+              <p><strong>Date:</strong> {appointment.date}</p>
+              <p><strong>Time:</strong> {appointment.time}</p>
+              <p><strong>Reason:</strong> {appointment.reason}</p>
+              <p><strong>Status:</strong> {appointment.status}</p>
+              {appointment.status === 'Pending' && (
+                <div className="space-x-4 mt-2">
+                  <button
+                    onClick={() => handleAction(appointment._id, 'Accepted')}
+                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    onClick={() => handleAction(appointment._id, 'Rejected')}
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                  >
+                    Reject
+                  </button>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
     </div>
   );
 };
 
 export default ViewAppointment;
+

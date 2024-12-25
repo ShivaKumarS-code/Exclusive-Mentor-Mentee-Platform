@@ -29,7 +29,7 @@ const FeedbackForm = ({ submitFeedback }) => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-md">
+    <div className="max-w-lg mx-auto border-2 border-yellow-500 p-6 translate-y-1/3 bg-zinc-800 rounded-3xl">
       <h2 className="text-2xl font-bold mb-4">Your Feedback</h2>
       {feedbackSubmitted && (
         <div className="bg-green-100 text-green-700 p-4 mb-4 rounded-md">
@@ -39,7 +39,7 @@ const FeedbackForm = ({ submitFeedback }) => {
 
       <form onSubmit={handleSubmit}>
         <textarea
-          className="w-full border border-gray-300 rounded-md p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border bg-zinc-700 border-purple-500 rounded-md p-3 mb-4 focus:outline-none"
           rows="5"
           placeholder="Write your feedback here..."
           value={feedbackText}
@@ -48,7 +48,7 @@ const FeedbackForm = ({ submitFeedback }) => {
 
         <button
           type="submit"
-          className={`w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+          className={`w-full bg-purple-500 text-black hover:text-white px-4 py-2 rounded-xl hover:bg-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
             isSubmitting ? "cursor-not-allowed" : ""
           }`}
           disabled={isSubmitting}
