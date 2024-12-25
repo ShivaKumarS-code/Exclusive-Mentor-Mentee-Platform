@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { viewSelfAchievements, viewMenteesAchievements } from "../../api/achievementApi"; // Import the correct API functions
+import { viewSelfAchievements, viewMenteesAchievements, downloadFile } from "../../api/achievementApi"; // Import the correct API functions
 
 const ViewAchievements = () => {
   const [achievements, setAchievements] = useState([]);
@@ -40,10 +40,26 @@ const ViewAchievements = () => {
     }
   };
 
+  const handleDownloadFile = async (fileId) => {
+    try {
+      const fileBlob = await downloadFile(fileId);
+      const url = window.URL.createObjectURL(fileBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `file-${fileId}`; // You can customize the filename
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(err.message || "Failed to download file");
+    }
+  };
+
   return (
-    <div className="bg-white shadow-lg rounded-md h-screen overflow-hidden flex flex-col">
-      <div className="p-4 border-b bg-gray-50">
-        <h1 className="text-2xl font-bold text-gray-800 text-center">
+    <div className="bg-black text-white shadow-lg rounded-md h-screen overflow-hidden flex flex-col">
+      <div className="p-4 border-b bg-black">
+        <h1 className="text-[35px] font2 font-bold text-center">
           {userRole === "mentee" ? "Your Achievements" : "Mentees' Achievements"}
         </h1>
       </div>
@@ -56,24 +72,34 @@ const ViewAchievements = () => {
           achievements.map((achievement) => (
             <div
               key={achievement._id} // Use the unique _id field for the key
-              className="p-4 border rounded-md shadow-sm bg-gray-100 hover:bg-gray-200 transition"
+              className="p-4 border-2 border-yellow-500 rounded-3xl shadow-sm bg-zinc-800 hover:bg-zinc-900 transition"
             >
-              <h3 className="text-lg font-semibold text-gray-800">
+              <h3 className="text-lg font-semibold text-white">
                 Mentee Name: {achievement.mentee?.username || "Anonymous"} {/* Display mentee's name */}
               </h3>
-              <p className="text-gray-700 mt-2">Achievement: {achievement.achievementText}</p>
+              <p className="text-white mt-2">Achievement: {achievement.achievementText}</p>
+              {achievement.fileData && (
+                <div className="mt-2">
+                  <button
+                    onClick={() => handleDownloadFile(achievement._id)}
+                    className="text-blue-500 hover:underline"
+                  >
+                    Download Attached File
+                  </button>
+                </div>
+              )}
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-600">No achievements to display.</p>
+          <p className="text-center text-purple-500">No achievements to display.</p>
         )}
       </div>
 
       {userRole === "mentee" && (
-        <div className="p-4 border-t bg-gray-50 text-center">
+        <div className="p-4 border-t bg-black text-center">
           <button
             onClick={handleBack}
-            className="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800"
+            className="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800"
           >
             Back
           </button>

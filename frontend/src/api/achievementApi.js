@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Define the base URL of your backend API
-const API_URL = '/api/achievements'; // Update with your actual API URL
+const API_URL = '/api/achievements'; // This will be proxied to http://localhost:3000/api/achievements
 
 // Helper function to get the access token from local storage
 const getAuthToken = () => {
@@ -9,23 +9,30 @@ const getAuthToken = () => {
 };
 
 // API function to upload achievement as a mentee
-export const uploadAchievement = async (achievementText) => {
+export const uploadAchievement = async (achievementText, file) => {
   try {
     const token = getAuthToken();
     if (!token) {
       throw new Error('No access token found');
     }
 
+    const formData = new FormData();
+    formData.append('achievementText', achievementText);
+    if (file) {
+      formData.append('file', file);
+    }
+
     const response = await axios.post(
       `${API_URL}/upload`,
-      { achievementText },
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       }
     );
-    
+
     return response.data;
   } catch (error) {
     console.error('Error uploading achievement:', error);
@@ -71,6 +78,28 @@ export const viewMenteesAchievements = async () => {
     return response.data.achievements;
   } catch (error) {
     console.error('Error fetching mentees achievements:', error);
+    throw error.response?.data || error.message;
+  }
+};
+
+// API function to download file
+export const downloadFile = async (fileId) => {
+  try {
+    const token = getAuthToken();
+    if (!token) {
+      throw new Error('No access token found');
+    }
+
+    const response = await axios.get(`${API_URL}/download/${fileId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      responseType: 'blob', // Ensure the response is treated as a blob
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error downloading file:', error);
     throw error.response?.data || error.message;
   }
 };

@@ -5,13 +5,15 @@ import FeedbackView from "../../components/feedback/FeedbackView"; // Adjust the
 
 const ViewFeedback = () => {
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen">
       {/* Sidebar for navigation */}
       <Sidebar role="mentor" />
 
       {/* Main content area */}
-      <div className="flex-grow flex flex-col p-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">View Feedback</h1>
+      <div className="flex-grow flex flex-col p-6 text-white bg-black border-l-4 border-purple-700 rounded-l-[50px]">
+        <h1 className="text-[30px] font2 translate-y-[20px] font-bold mb-[50px]
+        ..
+        ">View Feedback</h1>
 
         {/* FeedbackView Component in a scrollable container */}
         <div className="flex-grow">

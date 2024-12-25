@@ -37,21 +37,21 @@ const YourMentee = () => {
   return (
     <div className="flex">
       <Sidebar role="mentor" />
-      <div className="flex-grow p-6">
-        <h1 className="text-xl font-bold">Your Mentees</h1>
+      <div className="flex-grow p-6 text-white bg-black border-l-4 border-purple-700 rounded-l-[50px]">
+        <h1 className="text-[30px] font2 translate-y-[20px] font-bold mb-[40px]">Your Mentees</h1>
         {loading ? (
           <p>Loading mentees...</p>
         ) : (
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {mentees.length > 0 ? (
               mentees.map((mentee) => (
-                <div key={mentee._id} className="bg-white p-4 rounded-lg shadow-md">
-                  <h2 className="text-lg font-semibold">{mentee.name}</h2>
-                  <p className="text-gray-600">{mentee.email}</p>
+                <div key={mentee._id} className="bg-zinc-800 p-4 rounded-2xl">
+                  <h2 className="text-lg text-white font-semibold">{mentee.username}</h2>
+                  <p className="text-blue-600">{mentee.email}</p>
                   <div className="mt-4 flex justify-between">
                     <button
                       onClick={() => handleRemoveMentee(mentee._id)} // Pass mentee._id here
-                      className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                      className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
                     >
                       Remove
                     </button>

@@ -1,5 +1,11 @@
 import Achievement from '../models/Achievement.js';
 import User from '../models/User.js';
+import multer from 'multer';
+import path from 'path';
+
+// Setup storage engine for multer (optional, for temporary storage)
+const storage = multer.memoryStorage(); // Store file in memory
+const upload = multer({ storage: storage });
 
 // Controller to upload achievement as a mentee
 export const uploadAchievement = async (req, res) => {
@@ -10,9 +16,19 @@ export const uploadAchievement = async (req, res) => {
   }
 
   try {
+    let fileData = null;
+    let mimeType = null;
+
+    if (req.file) {
+      fileData = req.file.buffer; // Store the file buffer
+      mimeType = req.file.mimetype; // Store the MIME type
+    }
+
     const newAchievement = await Achievement.create({
       mentee: req.user.id,
       achievementText,
+      fileData,
+      mimeType,
     });
 
     res.status(201).json({ message: 'Achievement uploaded successfully', achievement: newAchievement });
@@ -61,5 +77,25 @@ export const viewMenteesAchievements = async (req, res) => {
     res.status(200).json({ achievements });
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch mentees achievements', error: error.message });
+  }
+};
+
+// Controller to download file from database
+export const downloadFile = async (req, res) => {
+  const { fileId } = req.params;
+
+  try {
+    const achievement = await Achievement.findById(fileId);
+
+    if (!achievement || !achievement.fileData) {
+      return res.status(404).json({ message: 'File not found' });
+    }
+
+    res.setHeader('Content-Type', achievement.mimeType);
+    res.setHeader('Content-Disposition', `attachment; filename="${achievement._id}${path.extname(achievement.mimeType)}"`);
+
+    res.send(achievement.fileData);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to download file', error: error.message });
   }
 };
