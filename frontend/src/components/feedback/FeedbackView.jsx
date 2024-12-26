@@ -38,7 +38,7 @@ const FeedbackView = () => {
               className="p-4 border border-purple-500 rounded-xl shadow-sm bg-zinc-700 hover:bg-zinc-800 transition"
             >
               <p className="font-semibold text-white mb-1">
-                Mentee: {feedback.mentee?.email || "Anonymous"}
+                Mentee: {feedback.mentee?.username || "Anonymous"}
               </p>
               <p className="text-blue-500">
                 <span className="font-semibold">Feedback:</span> {feedback.text}

@@ -64,6 +64,10 @@ const SelectMentee = () => {
           className="w-full mt-[20px] p-2 mb-6 bg-zinc-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
 
+        <div className="text-center text-gray-400 mb-6">
+          <span className="text-red-500">Note:</span> Only mentees without an assigned mentor will appear in search results.
+        </div>
+
         {loading ? (
           <div>Loading mentees...</div>
         ) : error ? (

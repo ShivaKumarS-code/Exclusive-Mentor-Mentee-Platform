@@ -64,7 +64,7 @@ export const getFeedbacksForMentor = async (req, res) => {
       return res.status(400).json({ message: "Invalid mentor ID." });
     }
 
-    const feedbacks = await Feedback.find({ mentor: mentorId }).populate("mentee", "name email");
+    const feedbacks = await Feedback.find({ mentor: mentorId }).populate("mentee", "username email");
 
     res.status(200).json({
       message: "Feedback fetched successfully.",

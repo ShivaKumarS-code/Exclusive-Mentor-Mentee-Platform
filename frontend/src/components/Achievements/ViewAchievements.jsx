@@ -72,7 +72,7 @@ const ViewAchievements = () => {
           achievements.map((achievement) => (
             <div
               key={achievement._id} // Use the unique _id field for the key
-              className="p-4 border-2 border-yellow-500 rounded-3xl shadow-sm bg-zinc-800 hover:bg-zinc-900 transition"
+              className="p-4 border border-yellow-500 rounded-3xl shadow-sm bg-zinc-800 hover:bg-zinc-900 transition"
             >
               <h3 className="text-lg font-semibold text-white">
                 Mentee Name: {achievement.mentee?.username || "Anonymous"} {/* Display mentee's name */}
@@ -109,4 +109,5 @@ const ViewAchievements = () => {
   );
 };
 
-export default ViewAchievements;
+export default ViewAchievements; 
+

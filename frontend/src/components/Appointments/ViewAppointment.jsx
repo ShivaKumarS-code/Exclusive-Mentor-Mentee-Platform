@@ -56,7 +56,7 @@ const ViewAppointment = () => {
         <ul className="space-y-4">
           {appointments.map((appointment) => (
             <li key={appointment._id} className="p-4 bg-zinc-700 rounded-lg">
-              <p><strong>Date:</strong> {appointment.date}</p>
+              <p><strong>Date:</strong> {new Date(appointment.date).toLocaleDateString()}</p>
               <p><strong>Time:</strong> {appointment.time}</p>
               <p><strong>Reason:</strong> {appointment.reason}</p>
               <p><strong>Status:</strong> {appointment.status}</p>
@@ -85,5 +85,4 @@ const ViewAppointment = () => {
   );
 };
 
-export default ViewAppointment;
-
+export default ViewAppointment; 
