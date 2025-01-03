@@ -79,7 +79,7 @@ Your Appointment System
 };
 
 // Schedule to run every day at 5:00 AM UTC
-cron.schedule('* * * * *', sendReminders, { //set the time as needed
+cron.schedule('0 0 * * *', sendReminders, { // Executes at 00:00 (midnight) every day
   timezone: 'UTC'
 });
 
